@@ -363,7 +363,7 @@ def respond_with_leaderboard
     leaders = []
     get_score_leaders.each_with_index do |leader, i|
       user_id = leader[:user_id]
-      name = get_slack_name(leader[:user_id], { :use_real_name => true })
+      name = get_slack_name(leader[:user_id], { :use_real_name => false })
       score = currency_format(get_user_score(user_id))
       leaders << "#{i + 1}. #{name}: #{score}"
     end
