@@ -323,11 +323,11 @@ def get_slack_name(user_id, options = {})
   else
     names = JSON.parse(names)
   end
-  if options[:use_real_name]
-    name = names["real_name"].nil? ? names["name"] : names["real_name"]
-  else
-    name = names["first_name"].nil? ? names["name"] : names["first_name"]
-  end
+  #if options[:use_real_name]
+  name = names["real_name"].nil? ? names["name"] : names["real_name"]
+  #else
+  #name = names["first_name"].nil? ? names["name"] : names["first_name"]
+  #end
   name
 end
 
