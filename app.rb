@@ -323,11 +323,11 @@ def get_slack_name(user_id, options = {})
   else
     names = JSON.parse(names)
   end
-  #if options[:use_real_name]
-  name = names["real_name"].nil? ? names["name"] : names["real_name"]
-  #else
-  #name = names["first_name"].nil? ? names["name"] : names["first_name"]
-  #end
+  if options[:use_real_name]
+    name = names["real_name"].nil? ? names["name"] : names["real_name"]
+  else
+    name = names["first_name"].nil? ? names["name"] : names["first_name"]
+  end
   name
 end
 
@@ -342,11 +342,11 @@ def get_slack_names_hash(user_id)
   if response["ok"]
     user = response["members"].find { |u| u["id"] == user_id }
     names = { :id => user_id, :name => user["name"]}
-    unless user["profile"].nil?
-      names["real_name"] = user["profile"]["real_name"] unless user["profile"]["real_name"].nil? || user["profile"]["real_name"] == ""
-      names["first_name"] = user["profile"]["first_name"] unless user["profile"]["first_name"].nil? || user["profile"]["first_name"] == ""
-      names["last_name"] = user["profile"]["last_name"] unless user["profile"]["last_name"].nil? || user["profile"]["last_name"] == ""
-    end
+  #  unless user["profile"].nil?
+  #    names["real_name"] = user["profile"]["real_name"] unless user["profile"]["real_name"].nil? || user["profile"]["real_name"] == ""
+  #    names["first_name"] = user["profile"]["first_name"] unless user["profile"]["first_name"].nil? || user["profile"]["first_name"] == ""
+  #    names["last_name"] = user["profile"]["last_name"] unless user["profile"]["last_name"].nil? || user["profile"]["last_name"] == ""
+  #  end
   else
     names = { :id => user_id, :name => "Sean Connery" }
   end
