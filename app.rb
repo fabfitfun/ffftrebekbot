@@ -324,10 +324,9 @@ def get_slack_name(user_id, options = {})
     names = JSON.parse(names)
   end
   if options[:use_real_name]
-    #name = names["real_name"].nil? ? names["name"] : names["real_name"]
+    name = names["real_name"].nil? ? names["name"] : names["real_name"]
   else
-    #name = names["first_name"].nil? ? names["name"] : names["first_name"]
-    name = "bob"
+    name = names["first_name"].nil? ? names["name"] : names["first_name"]
   end
   name
 end
@@ -359,12 +358,13 @@ end
 # 
 def respond_with_leaderboard
   key = "leaderboard:1"
+  response = []
   response = $redis.get(key)
   if response.nil?
     leaders = []
     get_score_leaders.each_with_index do |leader, i|
       user_id = leader[:user_id]
-      name = get_slack_name(leader[:user_id], { :use_real_name => false })
+      name = get_slack_name(leader[:user_id], { :use_real_name => true })
       score = currency_format(get_user_score(user_id))
       leaders << "#{i + 1}. #{name}: #{score}"
     end
