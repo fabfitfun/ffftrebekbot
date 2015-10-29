@@ -362,8 +362,8 @@ def respond_with_leaderboard
   response = $redis.get(key)
   if response.nil?
     leaders = []
-    #get_score_leaders.each_with_index do |leader, i|
-    get_score_leaders.each.with_index do |leader, i|
+    get_score_leaders.each_with_index do |leader, i|
+    #get_score_leaders.each.with_index do |leader, i|
       user_id = leader[:user_id]
       name = get_slack_name(leader[:user_id], { :use_real_name => true })
       score = currency_format(get_user_score(user_id))
@@ -417,8 +417,9 @@ def get_score_leaders(options = {})
       leaders = leaders.uniq{ |l| l[:user_id] }.sort{ |a, b| a[:score] <=> b[:score] }.slice(0, options[:limit])
     end
   else
-    leaders
+    #leaders
   end
+  leaders
 end
 
 # Funny quotes from SNL's Celebrity Jeopardy, to speak
