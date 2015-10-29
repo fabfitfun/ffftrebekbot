@@ -417,7 +417,7 @@ def get_score_leaders(options = {})
       leaders = leaders.uniq{ |l| l[:user_id] }.sort{ |a, b| a[:score] <=> b[:score] }.slice(0, options[:limit])
     end
   else
-    #leaders
+    leaders
   end
   leaders
 end
