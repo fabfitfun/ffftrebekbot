@@ -316,7 +316,6 @@ end
 def get_slack_name(user_id, options = {})
   options = { :use_real_name => false }.merge(options)
   key = "slack_user_names:2:#{user_id}"
-  name = "x"
   names = $redis.get(key)
   if names.nil?
     names = get_slack_names_hash(user_id)
@@ -328,10 +327,11 @@ def get_slack_name(user_id, options = {})
     #name = names["real_name"].nil? ? names["name"] : names["real_name"]
   else
     #name = names["first_name"].nil? ? names["name"] : names["first_name"]
+    name = "bob"
   end
   name
 end
-
+# "#{get_slack_name(user_id)}, your score is #{currency_format(user_score)}."
 # Makes an API request to Slack to get a user's set of names.
 # (Slack's outgoing webhooks only send the user ID, so we need this to
 # make the bot reply using the user's actual name.)
