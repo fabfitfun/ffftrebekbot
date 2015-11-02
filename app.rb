@@ -418,7 +418,7 @@ def respond_with_leaderboard
       name = get_slack_name(leader[:user_id], { :use_real_name => true })
       score = currency_format(get_user_score(user_id))
       attempts = get_user_attempts(user_id)
-      efficiency = score / (attempts.nonzero? || 1)
+      efficiency = get_user_score(user_id) / (attempts.nonzero? || 1)
       leaders << "#{i + 1}. #{name}: #{score} | #{efficiency}"
     end
     if leaders.size > 0
