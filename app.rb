@@ -275,7 +275,10 @@ end
 # 
 def respond_with_user_score(user_id)
   user_score = get_user_score(user_id)
-  "#{get_slack_name(user_id)}, your score is #{currency_format(user_score)}."
+  user_attempts = get_user_attempts(user_id)
+  "#{get_slack_name(user_id)}, your score is #{currency_format(user_score)}. You have answered #{user_attempts} questions."
+
+  #added ability to retrieve attempts.
 end
 
 # Gets the given user's score from redis
@@ -289,6 +292,19 @@ def get_user_score(user_id)
   end
   user_score.to_i
 end
+
+# DYO: Based off of get_user_score. This adds number of attempts per user. I should rewrite the variable names
+
+def get_user_attempts(user_id)
+  key = "user_attempts:#{user_id}"
+  user_score = $redis.get(key)
+  if user_score.nil?
+    $redis.set(key, 0)
+    user_score = 0
+  end
+  user_score.to_i
+end
+
 
 # Updates the given user's score in redis.
 # If the user doesn't have a score, initializes it at zero.
@@ -305,6 +321,27 @@ def update_score(user_id, score = 0)
     new_score
   end
 end
+
+
+# ###############
+
+# DYO: Based off of update_score. This adds number of attempts per user. I should rewrite this to not include score.
+
+def update_attempts(user_id, score = 0)
+  key = "user_attempts:#{user_id}"
+  user_score = $redis.get(key)
+  if user_score.nil?
+    $redis.set(key, score)
+    score
+  else
+    new_score = user_score.to_i + 1
+    $redis.set(key, new_score)
+    new_score
+  end
+end
+
+
+
 
 # Gets the given user's name(s) from redis.
 # If it's not in redis, makes an API request to Slack to get it,
