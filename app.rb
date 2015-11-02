@@ -279,7 +279,7 @@ end
 def respond_with_user_score(user_id)
   user_score = get_user_score(user_id)
   user_attempts = get_user_attempts(user_id)
-  user_efficiency = user_score / (user_attempts.nonzero? || 1)
+  user_efficiency = (user_score / (user_attempts.nonzero? || 1)) / 10
   "#{get_slack_name(user_id)}, your score is #{currency_format(user_score)} and efficiency is [#{user_efficiency}] of [#{user_attempts}] questions."
 
 
@@ -418,8 +418,8 @@ def respond_with_leaderboard
       name = get_slack_name(leader[:user_id], { :use_real_name => true })
       score = currency_format(get_user_score(user_id))
       attempts = get_user_attempts(user_id)
-      efficiency = get_user_score(user_id) / (attempts.nonzero? || 1)
-      leaders << "#{i + 1}. #{name}: #{score}    Rating: [#{efficiency}]"
+      efficiency = (get_user_score(user_id) / (attempts.nonzero? || 1)) / 10
+      leaders << "#{i + 1}. #{name}: #{score}    Efficiency: [#{efficiency}]"
     end
     if leaders.size > 0
       response = "Let's take a look at the top scores:\n\n#{leaders.join("\n")}"
