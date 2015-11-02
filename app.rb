@@ -320,6 +320,7 @@ def update_score(user_id, score = 0)
     $redis.set(key, new_score)
     new_score
   end
+  score = update_attempts(user_id, 1)
 end
 
 
