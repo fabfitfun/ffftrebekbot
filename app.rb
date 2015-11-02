@@ -419,7 +419,7 @@ def respond_with_leaderboard
       score = currency_format(get_user_score(user_id))
       attempts = get_user_attempts(user_id)
       efficiency = get_user_score(user_id) / (attempts.nonzero? || 1)
-      leaders << "#{i + 1}. #{name}: #{score} | #{efficiency}"
+      leaders << "#{i + 1}. #{name}: #{score}    Rating: [#{efficiency}]"
     end
     if leaders.size > 0
       response = "Let's take a look at the top scores:\n\n#{leaders.join("\n")}"
