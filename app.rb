@@ -279,7 +279,17 @@ end
 def respond_with_user_score(user_id)
   user_score = get_user_score(user_id)
   user_attempts = get_user_attempts(user_id)
-  "#{get_slack_name(user_id)}, your score is #{currency_format(user_score)}. You have answered #{user_attempts} questions."
+  user_efficiency = user_score / (user_attempts.nonzero? || 1)
+  "#{get_slack_name(user_id)}, your score is #{currency_format(user_score)} and effiency rating is #{user_efficiency} of #{user_attempts} questioned asked."
+
+
+  #def compute_average(a,b,c,d,e)
+  #total = [a,b,c,d,e].sum.to_f
+  #average = [a, 2*b, 3*c, 4*d, 5*e].sum / (total.nonzero? || 1)
+  #end
+
+  #efficiency
+
 
   #added ability to retrieve attempts.
 end
