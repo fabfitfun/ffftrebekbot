@@ -5,13 +5,21 @@
 
 A Jeopardy! bot for Slack, powered by the [jService](http://jservice.io/) API. Sets up a perpetual game of Jeorpardy! in your Slack channels.
 
+![](http://i.imgur.com/BjMDf6Z.png)
 
 ## FabFitFun Fork by David
 
-This version of Trebek bot includes addition of categories (from a pull request on original - [By Aamcintosh](https://github.com/gesteves/trebekbot/issues?q=is%3Apr+is%3Aopen+author%3Aamcintosh)), and also keeps track of attempts and gives the attempt to $ efficiency score.
+This version of Trebek bot includes addition of categories (merged from a pull request on original - [By Aamcintosh](https://github.com/gesteves/trebekbot/issues?q=is%3Apr+is%3Aopen+author%3Aamcintosh)), 
+
+Also merged in better question parsing by [JoeEnnever](https://github.com/JoeEnnever) [Pull Request](https://github.com/gesteves/trebekbot/pull/6/files)
 
 
-![](http://i.imgur.com/BjMDf6Z.png)
+Also we wrote... also keeps track of attempts and gives the attempts to $ efficiency score. $ amount / attempts
+
+
+
+
+
 
 ## Requirements
 
