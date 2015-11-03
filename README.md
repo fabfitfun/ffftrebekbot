@@ -8,7 +8,7 @@ A Jeopardy! bot for Slack, powered by the [jService](http://jservice.io/) API. S
 
 ## FabFitFun Fork by David
 
-This version of Trebek bot includes addition of categories (from a pull request on original), and also keeps track of attempts and gives the attempt to $ efficiency score.
+This version of Trebek bot includes addition of categories (from a pull request on original - https://github.com/gesteves/trebekbot/issues?q=is%3Apr+is%3Aopen+author%3Aamcintosh), and also keeps track of attempts and gives the attempt to $ efficiency score.
 
 
 ![](http://i.imgur.com/BjMDf6Z.png)
