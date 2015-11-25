@@ -297,7 +297,7 @@ def respond_with_user_score(user_id)
   user_score = get_user_score(user_id)
   user_attempts = get_user_attempts(user_id)
   user_efficiency = get_user_efficiency(user_id)
-  true_score = (get_user_efficiency * user_score).to_i
+  true_score = (user_efficiency * user_score).to_i
   "#{get_slack_name(user_id)}, your score is #{currency_format(user_score)} and efficiency is [#{user_efficiency}] of [#{user_attempts}] questions. Your true score is #{currency_format(true_score)}"
 
 
