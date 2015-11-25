@@ -194,16 +194,18 @@ def process_answer(params)
     elsif is_question_format?(user_answer) && is_correct_answer?(current_answer, user_answer)
       score = update_score(user_id, current_question["value"])
       attempt = update_attempts(user_id, 1)
+      effiency = update_effiency(user_id, 1, current_question["value"])
       reply = "That is correct, #{get_slack_name(user_id)}. Your total score is #{currency_format(score)}."
       mark_question_as_answered(params[:channel_id])
     elsif is_correct_answer?(current_answer, user_answer)
-      score = update_score(user_id, (current_question["value"] * -1))
-      attempt = update_attempts(user_id, 1)
+      # score = update_score(user_id, (current_question["value"] * -1))
+      # attempt = update_attempts(user_id, 1)
       reply = "That is correct, #{get_slack_name(user_id)}, but responses have to be in the form of a question. Your total score is #{currency_format(score)}."
       $redis.setex(answered_key, ENV["SECONDS_TO_ANSWER"], "true")
     else
       score = update_score(user_id, (current_question["value"] * -1))
       attempt = update_attempts(user_id, 1)
+      effiency = update_effiency(user_id, 0, current_question["value"])
       reply = "That is incorrect, #{get_slack_name(user_id)}. Your score is now #{currency_format(score)}."
       $redis.setex(answered_key, ENV["SECONDS_TO_ANSWER"], "true")
     end
@@ -275,9 +277,6 @@ def is_correct_answer?(correct, answer)
 end
 
 
-
-
-
 # Marks question as answered by:
 # Deleting the current question from redis,
 # and "shushing" the bot for 5 seconds, so if two users
@@ -297,8 +296,9 @@ end
 def respond_with_user_score(user_id)
   user_score = get_user_score(user_id)
   user_attempts = get_user_attempts(user_id)
-  user_efficiency = user_score / (user_attempts.nonzero? || 1)
-  "#{get_slack_name(user_id)}, your score is #{currency_format(user_score)} and efficiency is [#{user_efficiency}] of [#{user_attempts}] questions."
+  user_efficiency = get_user_efficiency(user_id)
+  true_score = (get_user_efficiency * user_score).to_i
+  "#{get_slack_name(user_id)}, your score is #{currency_format(user_score)} and efficiency is [#{user_efficiency}] of [#{user_attempts}] questions. Your true score is #{currency_format(true_score)}"
 
 
   #def compute_average(a,b,c,d,e)
@@ -336,6 +336,18 @@ def get_user_attempts(user_id)
   user_score.to_i
 end
 
+# Get user efficiency metric
+def get_user_efficiency(user_id)
+  key = "user_efficiency:#{user_id}"
+  user_efficiency = $redis.get(key)
+  if user_efficiency.nil?
+    user_efficiency = 0
+  else
+    user_efficiency = JSON.parse(user_efficiency)
+    user_efficiency = user_efficiency['val']/user_efficiency['total']
+  end
+  user_efficiency.round(2)
+end
 
 # Updates the given user's score in redis.
 # If the user doesn't have a score, initializes it at zero.
@@ -371,7 +383,24 @@ def update_attempts(user_id, score = 0)
   end
 end
 
-
+# Updates user effiency based on correct/incorrect answer and question value
+def update_efficiency(user_id, right = 0, question_value = 0)
+  user_efficiency_key = "user_efficiency:#{user_id}"
+  user_efficiency = $redis.get(user_efficiency_key)
+  val = (right == 1) ? question_value : ((score/100)**2)*5
+  if user_efficiency.nil?
+    efficiency_hash = {"val" => val, "total" => question_value}
+    $redis.set(user_efficiency_key, efficiency_hash.to_json)
+    efficiency_hash
+  else
+    user_efficiency = JSON.parse(user_efficiency)
+    val += user_efficiency["val"]
+    question_value += user_efficiency["total"]
+    new_efficiency_hash = {"val" => val, "total" => question_value}
+    $redis.set(user_efficiency_key, new_efficiency_hash.to_json)
+    new_efficiency_hash
+  end
+end
 
 
 # Gets the given user's name(s) from redis.
@@ -436,7 +465,7 @@ def respond_with_leaderboard
       name = get_slack_name(leader[:user_id], { :use_real_name => true })
       score = currency_format(get_user_score(user_id))
       attempts = get_user_attempts(user_id)
-      efficiency = get_user_score(user_id) / (attempts.nonzero? || 1)
+      efficiency = get_user_efficiency(user_id)
       leaders << "#{i + 1}. #{name}: #{score}    Efficiency: [#{efficiency}]"
     end
     if leaders.size > 0
