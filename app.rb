@@ -387,7 +387,7 @@ end
 def update_efficiency(user_id, right = 0, question_value = 0)
   user_efficiency_key = "user_efficiency:#{user_id}"
   user_efficiency = $redis.get(user_efficiency_key)
-  val = (right == 1) ? question_value : ((score/100)**2)*5
+  val = (right == 1) ? question_value : ((question_value/100)**2)*5
   if user_efficiency.nil?
     efficiency_hash = {"val" => val, "total" => question_value}
     $redis.set(user_efficiency_key, efficiency_hash.to_json)
