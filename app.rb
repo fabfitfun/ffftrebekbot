@@ -344,7 +344,7 @@ def get_user_efficiency(user_id)
     user_efficiency = 0
   else
     user_efficiency = JSON.parse(user_efficiency)
-    user_efficiency = user_efficiency['val']/user_efficiency['total']
+    user_efficiency = user_efficiency["val"].to_f/user_efficiency["total"].to_f
   end
   user_efficiency.round(2)
 end
