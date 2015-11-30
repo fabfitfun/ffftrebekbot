@@ -467,7 +467,7 @@ def respond_with_leaderboard
       attempts = get_user_attempts(user_id)
       efficiency = get_user_efficiency(user_id)
       efficiencytrue = efficiency * 100
-      scoretrue = score * efficiency
+      scoretrue = get_user_score(user_id) * efficiency
       leaders << "#{i + 1}. #{name}: #{score}    Efficiency: #{efficiencytrue}%   FFFRank™: #{scoretrue}"
     end
     if leaders.size > 0
