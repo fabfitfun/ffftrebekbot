@@ -502,7 +502,7 @@ def respond_with_fffboard
       efficiency = get_user_efficiency(user_id)
       efficiencytrue = efficiency * 100
       fffrank = (scoretrue * efficiency).to_i
-      leaders << "#{i + 1}. #{name}, FFFRank: FFFRank™: #{currency_format(fffrank)}    Efficiency: #{efficiencytrue}%   Raw Score: #{score}"
+      leaders << "#{i + 1}. #{name}, FFFRank™: #{currency_format(fffrank)}    Efficiency: #{efficiencytrue}%   Raw Score: #{score}"
     end
     if leaders.size > 0
       response = "Let's take a look at the top scores:\n\n#{leaders.join("\n")}"
