@@ -481,6 +481,37 @@ def respond_with_leaderboard
   response
 end
 
+# Speaks the top scores across Slack.
+# The response is cached for 5 minutes.
+# 
+def respond_with_fffboard
+  key = "fffboard:1"
+  #response = []
+  response = $redis.get(key)
+  if response.nil?
+    leaders = []
+    get_fff_leaders.each_with_index do |leader, i|
+    #get_score_leaders.each.with_index do |leader, i|
+      user_id = leader[:user_id]
+      name = get_slack_name(leader[:user_id], { :use_real_name => true })
+      score = currency_format(get_user_score(user_id))
+      scoretrue = get_user_score(user_id)
+      attempts = get_user_attempts(user_id)
+      efficiency = get_user_efficiency(user_id)
+      efficiencytrue = efficiency * 100
+      fffrank = (scoretrue * efficiency).to_i
+      leaders << "#{i + 1}. #{name}, FFFRank: FFFRank™: #{currency_format(fffrank)}    Efficiency: #{efficiencytrue}%   Raw Score: #{score}"
+    end
+    if leaders.size > 0
+      response = "Let's take a look at the top scores:\n\n#{leaders.join("\n")}"
+    else
+      response = "There are no scores yet!"
+    end
+    $redis.setex(key, 60*5, response)
+  end
+  response
+end
+
 # Speaks the bottom scores across Slack.
 # The response is cached for 5 minutes.
 # 
@@ -511,6 +542,25 @@ def get_score_leaders(options = {})
   options = { :limit => 10, :order => "desc" }.merge(options)
   leaders = []
   $redis.scan_each(:match => "user_score:*"){ |key| user_id = key.gsub("user_score:", ""); leaders << { :user_id => user_id, :score => get_user_score(user_id) } }
+  puts "[LOG] Leaderboard: #{leaders.to_s}"
+  if leaders.size > 1
+    if options[:order] == "desc"
+      leaders = leaders.uniq{ |l| l[:user_id] }.sort{ |a, b| b[:score] <=> a[:score] }.slice(0, options[:limit])
+    else
+      leaders = leaders.uniq{ |l| l[:user_id] }.sort{ |a, b| a[:score] <=> b[:score] }.slice(0, options[:limit])
+    end
+  else
+    leaders
+  end
+  leaders
+end
+
+# Gets N scores from redis, with optional sorting.
+# 
+def get_fff_leaders(options = {})
+  options = { :limit => 10, :order => "desc" }.merge(options)
+  leaders = []
+  $redis.scan_each(:match => "user_efficiency:*"){ |key| user_id = key.gsub("user_efficiency:", ""); leaders << { :user_id => user_id, :score => (get_user_score(user_id)*get_user_efficiency(user_id)).to_i } }
   puts "[LOG] Leaderboard: #{leaders.to_s}"
   if leaders.size > 1
     if options[:order] == "desc"
