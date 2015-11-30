@@ -469,7 +469,7 @@ def respond_with_leaderboard
       efficiency = get_user_efficiency(user_id)
       efficiencytrue = efficiency * 100
       fffrank = (scoretrue * efficiency).to_i
-      leaders << "#{i + 1}. #{name}: #{score}    Efficiency: #{efficiencytrue}%   FFFRank™: #{fffrank} "
+      leaders << "#{i + 1}. #{name}: #{score}    Efficiency: #{efficiencytrue}%   FFFRank™: $#{fffrank} "
     end
     if leaders.size > 0
       response = "Let's take a look at the top scores:\n\n#{leaders.join("\n")}"
