@@ -623,6 +623,7 @@ Type `#{ENV["BOT_USERNAME"]} I'll take [category]` start a new round with a spec
 Type `#{ENV["BOT_USERNAME"]} what is my score` to see your current score.
 Type `#{ENV["BOT_USERNAME"]} show the leaderboard` to see the top scores.
 Type `#{ENV["BOT_USERNAME"]} show the loserboard` to see the bottom scores.
+Type `#{ENV["BOT_USERNAME"]} show the fffboard` to see the FFFRank scores.
 help
   reply
 end
