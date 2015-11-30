@@ -52,6 +52,8 @@ post "/" do
       response = respond_with_help
     elsif params[:text].match(/^show (me\s+)?(the\s+)?leaderboard$/i)
       response = respond_with_leaderboard
+    elsif params[:text].match(/^show (me\s+)?(the\s+)?fffboard$/i)
+      response = respond_with_fffboard
     elsif params[:text].match(/^show (me\s+)?(the\s+)?loserboard$/i)
       response = respond_with_loserboard
     elsif params[:text].match(/^show (me\s+)?(the\s+)?categories$/i)
