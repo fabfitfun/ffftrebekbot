@@ -464,11 +464,12 @@ def respond_with_leaderboard
       user_id = leader[:user_id]
       name = get_slack_name(leader[:user_id], { :use_real_name => true })
       score = currency_format(get_user_score(user_id))
+      scoretrue = get_user_score(user_id)
       attempts = get_user_attempts(user_id)
       efficiency = get_user_efficiency(user_id)
       efficiencytrue = efficiency * 100
-      scoretrue = get_user_score(user_id) * efficiency
-      leaders << "#{i + 1}. #{name}: #{score}    Efficiency: #{efficiencytrue}%   FFFRank™: #{scoretrue}"
+      fffrank = (scoretrue * efficiency).to_i
+      leaders << "#{i + 1}. #{name}: #{score}    Efficiency: #{efficiencytrue}%   FFFRank™: #{fffrank} "
     end
     if leaders.size > 0
       response = "Let's take a look at the top scores:\n\n#{leaders.join("\n")}"
