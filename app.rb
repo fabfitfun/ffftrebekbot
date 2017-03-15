@@ -541,7 +541,7 @@ end
 # Gets N scores from redis, with optional sorting.
 # 
 def get_score_leaders(options = {})
-  options = { :limit => 10, :order => "desc" }.merge(options)
+  options = { :limit => 20, :order => "desc" }.merge(options)
   leaders = []
   $redis.scan_each(:match => "user_score:*"){ |key| user_id = key.gsub("user_score:", ""); leaders << { :user_id => user_id, :score => get_user_score(user_id) } }
   puts "[LOG] Leaderboard: #{leaders.to_s}"
