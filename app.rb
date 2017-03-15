@@ -560,7 +560,7 @@ end
 # Gets N scores from redis, with optional sorting.
 # 
 def get_fff_leaders(options = {})
-  options = { :limit => 10, :order => "desc" }.merge(options)
+  options = { :limit => 20, :order => "desc" }.merge(options)
   leaders = []
   $redis.scan_each(:match => "user_efficiency:*"){ |key| user_id = key.gsub("user_efficiency:", ""); leaders << { :user_id => user_id, :score => (get_user_score(user_id)*get_user_efficiency(user_id)).to_i } }
   puts "[LOG] Leaderboard: #{leaders.to_s}"
